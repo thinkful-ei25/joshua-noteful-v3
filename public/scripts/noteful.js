@@ -56,7 +56,7 @@ const noteful = (function () {
    */
   function generateNotesList(list = [], currNote) {
     const listItems = list.map(item => `
-      <li data-id="${item.id}" class="js-note-element ${currNote.id === item.id ? 'active' : ''}">
+      <li data-id="${item._id}" class="js-note-element ${currNote.id === item.id ? 'active' : ''}">
         <a href="#" class="name js-note-link">${item.title}</a>
         <button class="removeBtn js-note-delete-button">X</button>
         <div class="metadata">
