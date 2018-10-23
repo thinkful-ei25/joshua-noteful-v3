@@ -43,7 +43,7 @@ router.get('/:id', (req, res, next) => {
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
-  const requiredFields = ['type'];
+  const requiredFields = ['title'];
   for(let i = 0; i < requiredFields.length; i++){
     const field = requiredFields[i];
     if(!(field in req.body)) {
