@@ -7,21 +7,14 @@ const router = express.Router();
 
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
-  const filters = {};
-  const queriableFields = ['title', 'content'];
-  queriableFields.forEach(field => {
-    if(req.query[field]){
-      filters[field] = req.query[field];
-    }
-  });
-  return Note
-    .find(filters)
+  let query = {};
+  if(req.query.searchTerm){
+    query = {$or:[{title:{$regex: req.query.searchTerm, $options: 'i'}},{content:{$regex: req.query.searchTerm, $options: 'i'}}]}
+  }  
+  Note
+    .find(query)
     .then(results => {
-      if(results) {
-        res.json(results);
-      }else{
-        next();
-      }
+      res.json(results);
     })
     .catch(err => {
       next(err);
@@ -43,7 +36,7 @@ router.get('/:id', (req, res, next) => {
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
-  const requiredFields = ['title'];
+  const requiredFields = ['type'];
   for(let i = 0; i < requiredFields.length; i++){
     const field = requiredFields[i];
     if(!(field in req.body)) {
