@@ -43,10 +43,10 @@ const Note = require('../models/note');
 
 //     });
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
-    .then( () => {
-        const requiredFields = ['title'];
-        for(let i = 0; i < requiredFields.length; i++){
-            if(!field in req.body
-        }
-    });
+// mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
+//     .then( () => {
+//         const requiredFields = ['title'];
+//         for(let i = 0; i < requiredFields.length; i++){
+//             if(!field in req.body
+//         }
+//     });

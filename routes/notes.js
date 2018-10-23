@@ -1,34 +1,65 @@
 'use strict';
 
 const express = require('express');
-
+const { Note } = require("../models/note");
 const router = express.Router();
+
 
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
-
-  console.log('Get All Notes');
-  res.json([
-    { id: 1, title: 'Temp 1' },
-    { id: 2, title: 'Temp 2' },
-    { id: 3, title: 'Temp 3' }
-  ]);
-
-});
+  const filters = {};
+  const queriableFields = ['title', 'content'];
+  queriableFields.forEach(field => {
+    if(req.query[field]){
+      filters[field] = req.query[field];
+    }
+  });
+  return Note
+    .find(filters)
+    .then(results => {
+      if(results) {
+        res.json(results);
+      }else{
+        next();
+      }
+    })
+    .catch(err => {
+      next(err);
+    })
+  });
 
 /* ========== GET/READ A SINGLE ITEM ========== */
 router.get('/:id', (req, res, next) => {
-
-  console.log('Get a Note');
-  res.json({ id: 1, title: 'Temp 1' });
+  return Note
+    .findById(req.params.id)
+    .then( results => {
+      res.json(results);
+    })
+    .catch(err => {
+      next(err);
+    })
 
 });
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
-
-  console.log('Create a Note');
-  res.location('path/to/new/document').status(201).json({ id: 2, title: 'Temp 2' });
+  const requiredFields = ['type'];
+  for(let i = 0; i < requiredFields.length; i++){
+    const field = requiredFields[i];
+    if(!(field in req.body)) {
+      const message = `Missing ${field} in response body`;
+      console.error(message);
+      return res.status(400).send(message)
+    }
+  }
+  Note.create({
+    title: req.body.title,
+    content: req.body.content
+  })
+    .then(note => res.status(201).json(note))
+    .catch(err => {
+      next(err);
+    });
 
 });
 

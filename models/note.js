@@ -5,6 +5,7 @@ const noteSchema = new mongoose.Schema({
     content: String
 });
 
-noteSchema.set('timestamps', true);
 
-module.exports = mongoose.model('Note', noteSchema);
+noteSchema.set('timestamps', true);
+const Note = mongoose.model('Note', noteSchema);
+module.exports = { Note };
