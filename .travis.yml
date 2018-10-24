@@ -1,6 +1,10 @@
 language: node_js
 node_js: node
-services: 
-  -mongodb
-
-  # trigger a travis
+services: "-mongodb"
+deploy:
+  provider: heroku
+  api_key:
+    secure: CLLJAkjbrPP/8pMmjDiW3q0zyQBasKnT8/SpHNX5gI9leYAHEk/0MdZOkZvwzLWz8pDy9FQ0guSc8ZNXtpHHWsNq+R7S0xp3CA7lCfyIjla0ESR6maJMXlndL6H6yYz+B6hfVWBo9/onzfNvzBwA6zT8tbbFDb4sAD0De+6Jdtf3QcYHwcOZQBLf2m16HGVEHAjayGLYC5eCVsMMRvEt5DOGtzFG3BbCsLah4+BP6jSKKcn0pn/vwADu8uVPOl9OBMkn2lYSsb+J+2rbH3yxZRgVs4iZJ777eA4DeTtxkVJum8hDCX9J2DurLotLBXZMOlpune5UXf/Haic8jmHc/xIiu4HeQOlemiXFbNNxPqstuqZkxfqcUOOlBw1B7URxMokJUGbdLIZOGLulA6ncCXlp7d/CQmY0Pakput8KkP9s/IwB6Jg5/Uiamch2QJehmmy0hPiRW2wKzSkF1qKxIVGfFuuOhzX1qupWTsJaidw8M4ZZrdfAXA8psDy7TnEMRn6dLmJA14VC5t6DZp9ZoJyExdXsqYtPYXxbl7P1MG+4xVKZ0BfYWS52uAaq7OAEhw/cAbD4lOs19xjISufm6pIL7p1XGz/lBaeVJt7E2aqEsOcUxNhQDUPipDNEGFl85OkndWmw0F4Ad3660gQJUwLLgHdGv9CRijyJ7NWQ/q8=
+  app: y
+  on:
+    repo: thinkful-ei25/joshua-noteful-v3
