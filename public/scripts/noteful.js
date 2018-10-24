@@ -56,7 +56,7 @@ const noteful = (function () {
    */
   function generateNotesList(list = [], currNote) {
     const listItems = list.map(item => `
-      <li data-id="${item._id}" class="js-note-element ${currNote.id === item._id ? 'active' : ''}">
+      <li data-id="${item.id}" class="js-note-element ${currNote.id === item.id ? 'active' : ''}">
         <a href="#" class="name js-note-link">${item.title}</a>
         <button class="removeBtn js-note-delete-button">X</button>
         <div class="metadata">
@@ -74,7 +74,7 @@ const noteful = (function () {
       </li>`;
 
     const listItems = list.map(item => `
-      <li data-id="${item._id}" class="js-folder-item ${currQuery.folderId === item._id ? 'active' : ''}">
+      <li data-id="${item.id}" class="js-folder-item ${currQuery.folderId === item.id ? 'active' : ''}">
         <a href="#" class="name js-folder-link">${item.name}</a>
         <button class="removeBtn js-folder-delete">X</button>
       </li>`);
@@ -83,7 +83,7 @@ const noteful = (function () {
   }
 
   function generateFolderSelect(list = []) {
-    const notes = list.map(item => `<option value="${item._id}">${item.name}</option>`);
+    const notes = list.map(item => `<option value="${item.id}">${item.name}</option>`);
     return '<option value="">Select Folder:</option>' + notes.join('');
   }
 
@@ -94,7 +94,7 @@ const noteful = (function () {
       </li>`;
 
     const listItems = list.map(item => `
-      <li data-id="${item._id}" class="js-tag-item ${currQuery.tagId === item._id ? 'active' : ''}">
+      <li data-id="${item.id}" class="js-tag-item ${currQuery.tagId === item.id ? 'active' : ''}">
         <a href="#" class="name js-tag-link">${item.name}</a>
         <button class="removeBtn js-tag-delete">X</button>
       </li>`);
@@ -102,7 +102,7 @@ const noteful = (function () {
   }
 
   function generateTagsSelect(list = []) {
-    const notes = list.map(item => `<option value="${item._id}">${item.name}</option>`);
+    const notes = list.map(item => `<option value="${item.id}">${item.name}</option>`);
     return notes.join('');
   }
 
