@@ -12,17 +12,13 @@ router.get('/', (req, res, next) => {
   const { searchTerm, folderId } = req.query;
 
   let filter = {};
-  
 
   if (searchTerm) {
-    filter.title = { $regex: searchTerm, $options: 'i' };
-
-    // Mini-Challenge: Search both `title` and `content`
-    // const re = new RegExp(searchTerm, 'i');
-    // filter.$or = [{ 'title': re }, { 'content': re }];
+    const re = new RegExp(searchTerm, 'i');
+    filter.$or = [{ 'title': re }, { 'content': re }];
   }
 
-  if(folderId){
+  if (folderId){
     filter.folderId = folderId;
   }
 
