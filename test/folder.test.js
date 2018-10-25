@@ -103,5 +103,50 @@ describe('Folderful API - folders', function () {
 
     
       });
+
+      describe('POST /api/folders', function () {
+
+        it('should create and return a new item when provided valid data', function () {
+          const newFolder = {
+            'name': 'CATS!'
+            };
+          let res;
+          return chai.request(app)
+            .post('/api/folders')
+            .send(newFolder)
+            .then(function (_res) {
+              res = _res;
+              expect(res).to.have.status(201);
+              expect(res).to.have.header('location');
+              expect(res).to.be.json;
+              expect(res.body).to.be.a('object');
+              expect(res.body).to.have.all.keys('id', 'name', 'createdAt', 'updatedAt');
+              return Folder.findById(res.body.id);
+            })
+            .then(data => {
+              expect(res.body.id).to.equal(data.id);
+              expect(res.body.name).to.equal(data.name);
+              expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
+              expect(new Date(res.body.updatedAt)).to.eql(data.updatedAt);
+            });
+        });
+    
+        it('should return an error when missing "name" field', function () {
+          const newFolder = {
+
+          };
+          return chai.request(app)
+            .post('/api/folders')
+            .send(newFolder)
+            .then(res => {
+              expect(res).to.have.status(400);
+              expect(res).to.be.json;
+              expect(res.body).to.be.a('object');
+              expect(res.body.message).to.equal('Missing `name` in request body');
+            });
+        });
+    
+      });
+    
     
     });

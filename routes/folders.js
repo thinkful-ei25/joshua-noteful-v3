@@ -55,7 +55,7 @@ router.post('/', (req, res, next) => {
   
     const newFolder = { name };
   
-    Note.create(newFolder)
+    Folder.create(newFolder)
       .then(result => {
         res.location(`${req.originalUrl}/${result.id}`)
           .status(201)
@@ -92,7 +92,7 @@ router.put('/:id', (req, res, next) => {
   
     const udateFolder = { name };
   
-    Note.findByIdAndUpdate(id, updateNFolder, { new: true })
+    Folder.findByIdAndUpdate(id, updateNFolder, { new: true })
       .then(result => {
         if (result) {
           res.json(result);
@@ -123,7 +123,7 @@ router.delete('/:id', (req, res, next) => {
       return next(err);
     }
   
-    Note.findByIdAndRemove(id)
+    Folder.findByIdAndRemove(id)
       .then(() => {
         res.status(204).end();
       })
