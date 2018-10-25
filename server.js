@@ -2,8 +2,7 @@
 
 const express = require('express');
 const morgan = require('morgan');
-const mongoose = require("mongoose");
-
+const mongoose = require('mongoose');
 
 const { PORT, MONGODB_URI } = require('./config');
 
@@ -43,25 +42,15 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
-if(require.main === module) {
+
+// Listen for incoming connections
+if (require.main === module) {
+  // Connect to DB and Listen for incoming connections
   mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
     .catch(err => {
-      console.error(`ERROR: ${err.message}`);
-      console.error('\n === Did you remember to start `mongod`? === \n');
       console.error(err);
     });
 
-  app.listen(PORT, function () {
-    console.info(`Server listening on ${this.address().port}`);
-  }).on('error', err => {
-    console.error(err);
-  });
-}
-
-
-
-// Listen for incoming connections
-if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, function () {
     console.info(`Server listening on ${this.address().port}`);
   }).on('error', err => {
