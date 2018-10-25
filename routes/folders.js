@@ -90,9 +90,9 @@ router.put('/:id', (req, res, next) => {
       return next(err);
     }
   
-    const udateFolder = { name };
+    const updateFolder = { name };
   
-    Folder.findByIdAndUpdate(id, updateNFolder, { new: true })
+    Folder.findByIdAndUpdate(id, updateFolder, { new: true })
       .then(result => {
         if (result) {
           res.json(result);

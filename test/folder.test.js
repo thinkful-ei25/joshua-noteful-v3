@@ -147,6 +147,106 @@ describe('Folderful API - folders', function () {
         });
     
       });
+
+      describe('PUT /api/folders/:id', function () {
+
+        it('should update the folder when provided valid data', function () {
+          const updateItem = {
+            'name': 'What about dogs?!'
+            };
+          let res, orig;
+          return Folder.findOne()
+            .then(_orig => {
+              orig = _orig;
+              return chai.request(app)
+                .put(`/api/folders/${orig.id}`)
+                .send(updateItem);
+            })
+            .then(function (_res) {
+              res = _res;
+              expect(res).to.have.status(200);
+              expect(res).to.be.json;
+              expect(res.body).to.be.a('object');
+              expect(res.body).to.have.all.keys('id', 'name', 'createdAt', 'updatedAt');
+              return Folder.findById(res.body.id);
+            })
+            .then( data => {
+              expect(res.body.name).to.equal(data.name);
+              expect(new Date(res.body.updatedAt)).to.eql(data.updatedAt);
+              // expect folder to have been updated
+              expect(new Date(res.body.updatedAt)).to.greaterThan(orig.updatedAt);
+            });
+        });
+    
+        it('should respond with status 400 and an error message when `id` is not valid', function () {
+          const updateItem = {
+            'name': 'What about dogs?!',
+            
+          };
+          return chai.request(app)
+            .put('/api/folders/NOT-A-VALID-ID')
+            .send(updateItem)
+            .then(res => {
+              expect(res).to.have.status(400);
+              expect(res.body.message).to.eq('The `id` is not valid');
+            });
+        });
+    
+        it('should respond with a 404 for an id that does not exist', function () {
+          // The string "DOESNOTEXIST" is 12 bytes which is a valid Mongo ObjectId
+          const updateItem = {
+            'name': 'DOGS?!',
+          };
+          return chai.request(app)
+            .put('/api/folders/DOESNOTEXIST')
+            .send(updateItem)
+            .then(res => {
+              expect(res).to.have.status(404);
+            });
+        });
+    
+        it('should return an error when missing "name" field', function () {
+          const updateItem = {
+            
+          };
+          let data;
+          return Folder.findOne()
+            .then(_data => {
+              data = _data;
+    
+              return chai.request(app)
+                .put(`/api/folders/${data.id}`)
+                .send(updateItem);
+            })
+            .then(res => {
+              expect(res).to.have.status(400);
+              expect(res).to.be.json;
+              expect(res.body).to.be.a('object');
+              expect(res.body.message).to.equal('Missing `name` in request body');
+            });
+        });
+    
+      });
+
+      describe('DELETE /api/folders/:id', function () {
+
+        it('should delete an existing document and respond with 204', function () {
+          let data;
+          return Folder.findOne()
+            .then(_data => {
+              data = _data;
+              return chai.request(app).delete(`/api/folders/${data.id}`);
+            })
+            .then(function (res) {
+              expect(res).to.have.status(204);
+              return Folder.countDocuments({ _id: data.id });
+            })
+            .then(count => {
+              expect(count).to.equal(0);
+            });
+        });
+    
+      });
     
     
     });
