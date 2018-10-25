@@ -9,17 +9,23 @@ const router = express.Router();
 
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
-  const { searchTerm } = req.query;
+  const { searchTerm, folderId } = req.query;
 
   let filter = {};
 
-  if (searchTerm) {
-    filter.title = { $regex: searchTerm, $options: 'i' };
-
-    // Mini-Challenge: Search both `title` and `content`
-    // const re = new RegExp(searchTerm, 'i');
-    // filter.$or = [{ 'title': re }, { 'content': re }];
+  if(searchTerm && folderId){
+    const regs = new RegExp(searchTerm, 'i');
+    filter.$and = [{folderId}, {$or:[{'title': regs}, {'content': regs}]}]
   }
+  else if(searchTerm){
+    const regs = new RegExp(searchTerm, 'i');
+    filter.$or = [{ 'title': regs }, { 'content': regs }];
+  }
+  else if(folderId){
+    filter = {'folderId': folderId};
+  }
+
+  
 
   Note.find(filter)
     .sort({ updatedAt: 'desc' })
