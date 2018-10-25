@@ -12,11 +12,11 @@ $(document).ready(function () {
     .then(([
       notes,
       folders,
-      tags
+      // tags
     ]) => {
       store.notes = notes;
       store.folders = folders;
-      store.tags = tags;
+      // store.tags = tags;
       noteful.render();
     });
 
