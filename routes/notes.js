@@ -57,16 +57,20 @@ router.get('/:id', (req, res, next) => {
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
-  const { title, content } = req.body;
+  const newNote = {};
+  ['title', 'content', 'folderId'].forEach((key) => {
+    if(req.body[key]){
+      newNote[key] = req.body[key];
+    }
+  });
 
   /***** Never trust users - validate input *****/
-  if (!title) {
+  if (!newNote.title) {
     const err = new Error('Missing `title` in request body');
     err.status = 400;
     return next(err);
   }
 
-  const newNote = { title, content };
 
   Note.create(newNote)
     .then(result => {
@@ -82,7 +86,7 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
-  const { title, content } = req.body;
+  const { title, content, folderId } = req.body;
 
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -97,7 +101,7 @@ router.put('/:id', (req, res, next) => {
     return next(err);
   }
 
-  const updateNote = { title, content };
+  const updateNote = { title, content, folderId };
 
   Note.findByIdAndUpdate(id, updateNote, { new: true })
     .then(result => {
