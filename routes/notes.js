@@ -23,10 +23,11 @@ router.get('/', (req, res, next) => {
   }
 
   if (tagId){
-    filter.tagId = tagId;
+    filter.tags = tagId;
   }
 
   Note.find(filter)
+    .populate('tags')
     .sort({ updatedAt: 'desc' })
     .then(results => {
       res.json(results);
@@ -47,6 +48,7 @@ router.get('/:id', (req, res, next) => {
   }
 
   Note.findById(id)
+    .populate('tags')
     .then(result => {
       if (result) {
         res.json(result);
@@ -113,6 +115,7 @@ router.put('/:id', (req, res, next) => {
   }
 
   Note.findByIdAndUpdate(id, updateNote, { new: true })
+    .populate('tags')
     .then(result => {
       if (result) {
         res.json(result);
