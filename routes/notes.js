@@ -9,7 +9,7 @@ const router = express.Router();
 
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
-  const { searchTerm, folderId } = req.query;
+  const { searchTerm, folderId, tagId } = req.query;
 
   let filter = {};
 
@@ -20,6 +20,10 @@ router.get('/', (req, res, next) => {
 
   if (folderId){
     filter.folderId = folderId;
+  }
+
+  if (tagId){
+    filter.tagId = tagId;
   }
 
   Note.find(filter)
@@ -58,7 +62,7 @@ router.get('/:id', (req, res, next) => {
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
   const newNote = {};
-  ['title', 'content', 'folderId'].forEach((key) => {
+  ['title', 'content', 'folderId', 'tagId'].forEach((key) => {
     if(req.body[key]){
       newNote[key] = req.body[key];
     }
@@ -86,7 +90,7 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
-  const { title, content, folderId } = req.body;
+  const { title, content, folderId, tagId } = req.body;
 
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -101,7 +105,12 @@ router.put('/:id', (req, res, next) => {
     return next(err);
   }
 
-  const updateNote = { title, content, folderId };
+  const updateNote = { title, content, folderId, tagId };
+
+  if(updateNote.tagId === ""){
+    delete updateNote.folderId;
+    updateNote.$unset = {folderId: 1};
+  }
 
   Note.findByIdAndUpdate(id, updateNote, { new: true })
     .then(result => {

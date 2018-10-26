@@ -67,9 +67,7 @@ router.post('/', (req, res, next) => {
           err.status = 400;
         }
         next(err);
-      })    
-      .catch(err => {
-        next(err);
+      
       });
   });
   /* ========== PUT/UPDATE A SINGLE ITEM ========== */

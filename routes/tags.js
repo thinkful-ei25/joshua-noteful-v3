@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const Tag = require('../models/tag');
+const Note = require('../models/note');
 
 const router = express.Router();
 
@@ -124,8 +125,13 @@ router.delete('/:id', (req, res, next) => {
       err.status = 400;
       return next(err);
     }
+
+    const tagRemovePromise = Tag.findByIdAndDelete(id);
+    const noteUpdatePromise = Note.updateMany(
+        {"tags": id}, {$pull: {'tags': id}}
+    );
   
-    Tag.findByIdAndRemove(id)
+    Promise.all([tagRemovePromise, noteUpdatePromise])
       .then(() => {
         res.status(204).end();
       })
